@@ -1,5 +1,6 @@
 package org.launchcode.techjobs.console;
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.TransducedAccessor_method_Integer;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -10,6 +11,8 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.Scanner;
 
 /**
  * Created by LaunchCode
@@ -74,9 +77,9 @@ public class JobData {
 
         for (HashMap<String, String> row : allJobs) {
 
-            String aValue = row.get(column);
+            String aValue = row.get(column).toLowerCase();
 
-            if (aValue.contains(value)) {
+            if (aValue.contains(value.toLowerCase())) {
                 jobs.add(row);
             }
         }
@@ -123,6 +126,28 @@ public class JobData {
             System.out.println("Failed to load job data");
             e.printStackTrace();
         }
+    }
+
+    public static void findByValue(String searchVal){
+        /*allJobs*/
+        loadData();
+        searchVal = searchVal.toLowerCase();
+        String searchReturnBuffer = "";
+        for(HashMap<String, String> job : allJobs){
+            Set keys = job.keySet();
+            String currentJob = "";
+            boolean flag = false;
+            for(Object key : keys){
+                String temp = job.get(key);
+                if(temp.toLowerCase().indexOf(searchVal) >= 0) flag = true;
+                currentJob += key + ": " + temp +"\n";
+            }
+            if(flag){
+                searchReturnBuffer += currentJob + "\n";
+                flag = false;
+            }
+        }
+        System.out.println(searchReturnBuffer);
     }
 
 }
